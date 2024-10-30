@@ -1,51 +1,34 @@
 <?php
-
 class Deur {
-    private bool $opSlot;
-    private bool $deuropening;
-    public string $deurNaam;
+    private $isUnlocked = false;
 
-    public function __construct(string $deurNaam) {
-        $this->opSlot = true; // De deur is op slot en moet worden geopend met een sleutel
-        $this->deuropening = false; // De deur is dicht en moet met de klink worden opengemaakt
-        $this->deurNaam = $deurNaam; // De deur krijgt de opgegeven naam
-    }
-
-    public function sleutelGebruiken(string $richting) {
-        switch($richting) {
-            case "links":
-                $this->opSlot = false; // Deur ontgrendeld
-                echo "Deur ontgrendeld\n";
-                break;
-            case "rechts":
-                $this->opSlot = true; // Deur vergrendeld
-                echo "Deur is op slot\n";
-                break;
-            default:
-                echo "Ongeldige richting\n";
-                break;
-        }
-    }
-
-    public function deurOpenen() {
-        if ($this->opSlot) {
-            echo "Deur is nog op slot en kan niet open\n";
-            return false;
-        }
-        $this->deuropening = true; // De deur is open
-        echo "Deur is geopend!\n";
-        return true;
-    }
-
-    public function doorDeurLopen() {
-        if ($this->opSlot) {
-            echo "Deur is nog op slot en kan niet open\n";
-            echo "Je stoot tegen de {$this->deurNaam}\n";
-        } elseif (!$this->deuropening) {
-            echo "Deur is nog dicht en kan niet doorheen worden gelopen\n";
-            echo "Je stoot tegen de {$this->deurNaam}\n";
+    public function draaiSleutel($richting) {
+        if ($richting === 'links' || $richting === 'rechts') {
+            if ($this->isUnlocked) {
+                return "De deur is al ontgrendeld!";
+            } else {
+                $this->isUnlocked = true;
+                return "De deur is nu ontgrendeld door de sleutel naar $richting te draaien.";
+            }
         } else {
-            echo "Je bent in je huiskamer!\n";
+            return "Ongeldige richting! Draai de sleutel naar 'links' of 'rechts' om te ontgrendelen.";
+        }
+    }
+
+    public function openDeur() {
+        if ($this->isUnlocked) {
+            return "Je opent de deur met de klink en stapt naar binnen!";
+        } else {
+            return "Je stoot tegen de voordeur! De deur is nog op slot!";
+        }
+    }
+
+    public function vergrendelDeur() {
+        if ($this->isUnlocked) {
+            $this->isUnlocked = false;
+            return "De deur is vergrendeld.";
+        } else {
+            return "De deur is al vergrendeld!";
         }
     }
 }
